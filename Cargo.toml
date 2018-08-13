@@ -4,9 +4,13 @@ version = "0.1.0"
 authors = []
 
 [dependencies]
-amethyst = "0.8.0"
+amethyst = "^0.8.0"
+derivative = "^1.0.0"
 dot_vox = "^3.0.0"
+glsl-layout = "0.1.1"
+gfx_core = "0.8.2"
 lazy_static = "^1.1.0"
+log = "^0.4.0"
 
 [dev-dependencies]
 avow = "^0.2"

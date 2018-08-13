@@ -264,8 +264,12 @@ version = "0.1.0"
 dependencies = [
  "amethyst 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "avow 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "derivative 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "dot_vox 3.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "gfx_core 0.8.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "glsl-layout 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "lazy_static 1.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "log 0.4.3 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]

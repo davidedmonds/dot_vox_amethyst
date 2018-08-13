@@ -1,7 +1,7 @@
 use amethyst::{GameData, State, StateData, Trans};
 use amethyst::assets::{AssetStorage, Loader};
 use amethyst::core::{GlobalTransform, Transform};
-use amethyst::core::cgmath::{Matrix4, Vector3};
+use amethyst::core::cgmath::{Deg, Matrix4, Vector3};
 use amethyst::renderer::{Camera, Event, KeyboardInput, MaterialDefaults, Mesh, Projection,
                          WindowEvent, VirtualKeyCode};
 use amethyst::prelude::*;
@@ -10,8 +10,8 @@ use dot_vox_format::DotVoxFormat;
 
 pub struct Example;
 
-const ARENA_HEIGHT: f32 = 100.0;
-const ARENA_WIDTH: f32 = 100.0;
+const ARENA_HEIGHT: f32 = 10.0;
+const ARENA_WIDTH: f32 = 10.0;
 
 impl<'a, 'b> State<GameData<'a, 'b>> for Example {
     fn handle_event(&mut self, _: StateData<GameData>, event: Event) -> Trans<GameData<'a, 'b>> {
@@ -49,11 +49,15 @@ impl<'a, 'b> State<GameData<'a, 'b>> for Example {
             (mesh, material)
         };
 
+        let mut transform = Transform::default();
+        transform.rotate_local(Vector3::new(1.0, 1.0, 0.0), Deg(45.0));
+        transform.move_global(Vector3::new(5.0, 5.0, -5.0));
+
         world.create_entity()
             .with(mesh)
             .with(material)
-            .with(Transform::default())
-            .with(GlobalTransform(Matrix4::from_translation(Vector3::new(1.0, 0.0, 0.0))))
+            .with(transform)
+            .with(GlobalTransform(Matrix4::from_translation(Vector3::new(0.0, 0.0, 0.0))))
             .build();
 
         initialise_camera(world);
