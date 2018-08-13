@@ -16,12 +16,16 @@ use amethyst::LoggerConfig;
 use amethyst::prelude::*;
 use amethyst::core::TransformBundle;
 use amethyst::renderer::{DisplayConfig, Pipeline, PosColor, RenderBundle, Stage};
+use amethyst::utils::fps_counter::FPSCounterBundle;
 use renderer::DrawVoxels;
 use state::Example;
+use systems::RotationSystem;
 
+mod components;
 mod dot_vox_format;
 mod renderer;
 mod state;
+mod systems;
 
 fn run() -> Result<(), amethyst::Error> {
     let path = format!(
@@ -38,7 +42,9 @@ fn run() -> Result<(), amethyst::Error> {
 
     let game_data = GameDataBuilder::default()
         .with_bundle(TransformBundle::new())?
-        .with_bundle(RenderBundle::new(pipe, Some(config)))?;
+        .with_bundle(RenderBundle::new(pipe, Some(config)))?
+        .with_bundle(FPSCounterBundle::default())?
+        .with(RotationSystem, "rotation_system", &[]);
     let mut game = Application::build("./", Example)?
         .build(game_data)?;
     game.run();
