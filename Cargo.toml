@@ -1,7 +1,14 @@
 [package]
-name = "aqua"
+name = "dot_vox_amethyst"
 version = "0.1.0"
-authors = []
+authors = ["David Edmonds <edmonds.d.r@gmail.com>"]
+description = "A Rust library for importing and rendering MagicaVoxel .vox files in Amethyst.rs"
+license = "MIT"
+keywords = ['voxel', 'MagicaVoxel', 'game', 'game-dev', 'amethyst']
+documentation = "https://docs.rs/dot_vox_amethyst"
+homepage = "https://docs.rs/dot_vox_amethyst"
+repository = "https://github.com/davidedmonds/dot_vox_amethyst"
+readme = "README.md"
 
 [dependencies]
 amethyst = "^0.8.0"

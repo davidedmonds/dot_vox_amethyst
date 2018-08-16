@@ -1,19 +1,56 @@
-use amethyst::{GameData, State, StateData, Trans};
+extern crate amethyst;
+extern crate dot_vox;
+extern crate dot_vox_amethyst;
+extern crate gfx_core;
+
+use amethyst::LoggerConfig;
 use amethyst::assets::{AssetStorage, Loader};
-use amethyst::core::{GlobalTransform, Transform};
-use amethyst::core::cgmath::{Matrix4, Vector3};
-use amethyst::renderer::{Camera, Event, KeyboardInput, MaterialDefaults, Mesh, Projection,
-                         WindowEvent, VirtualKeyCode};
+use amethyst::core::{GlobalTransform, Transform, TransformBundle};
+use amethyst::core::cgmath::{Deg, Matrix4, Vector3};
+use amethyst::ecs::{Component, DenseVecStorage, Join, ReadStorage, System, WriteStorage};
 use amethyst::prelude::*;
+use amethyst::renderer::{Camera, DisplayConfig, Event, KeyboardInput, MaterialDefaults, Mesh,
+                         Pipeline, PosColor, Projection, RenderBundle, Stage, WindowEvent,
+                         VirtualKeyCode};
+use amethyst::utils::fps_counter::FPSCounterBundle;
+use dot_vox_amethyst::{DotVoxFormat, DrawVoxels};
 
-use components::Name;
+fn run() -> Result<(), amethyst::Error> {
+    let path = format!(
+        "{}/resources/display_config.ron",
+        env!("CARGO_MANIFEST_DIR")
+    );
+    let config = DisplayConfig::load(&path);
 
-use dot_vox_format::DotVoxFormat;
+    let pipe = Pipeline::build().with_stage(
+        Stage::with_backbuffer()
+            .clear_target([0.00196, 0.23726, 0.21765, 1.0], 1.0)
+            .with_pass(DrawVoxels::<PosColor>::new()),
+    );
+
+    let game_data = GameDataBuilder::default()
+        .with_bundle(TransformBundle::new())?
+        .with_bundle(RenderBundle::new(pipe, Some(config)))?
+        .with_bundle(FPSCounterBundle::default())?
+        .with(RotationSystem, "rotation_system", &[]);
+    let mut game = Application::build("./", Example)?
+        .build(game_data)?;
+    game.run();
+    Ok(())
+}
+
+fn main() {
+    amethyst::start_logger(LoggerConfig::default());
+    if let Err(e) = run() {
+        println!("Error occurred during game execution: {}", e);
+        ::std::process::exit(1);
+    }
+}
 
 pub struct Example;
 
-const ARENA_HEIGHT: f32 = 1000.0;
-const ARENA_WIDTH: f32 = 1000.0;
+const ARENA_HEIGHT: f32 = 10.0;
+const ARENA_WIDTH: f32 = 10.0;
 
 impl<'a, 'b> State<GameData<'a, 'b>> for Example {
     fn on_start(&mut self, data: StateData<GameData>) {
@@ -83,4 +120,25 @@ fn initialise_camera(world: &mut World) {
             Matrix4::from_translation(Vector3::new(0.0, 0.0, 1.0)).into()
         ))
         .build();
+}
+
+pub struct RotationSystem;
+
+impl<'s> System<'s> for RotationSystem {
+    type SystemData = (
+        ReadStorage<'s, Name>,
+        WriteStorage<'s, Transform>
+    );
+
+    fn run(&mut self, (names, mut transforms): Self::SystemData) {
+        for (_name, mut transform) in (&names, &mut transforms).join() {
+            transform.rotate_local(Vector3::new(1.0, 1.0, 0.0), Deg(1.0));
+        }
+    }
+}
+
+pub struct Name(pub &'static str);
+
+impl Component for Name {
+    type Storage = DenseVecStorage<Self>;
 }
