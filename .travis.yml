@@ -1,3 +1,5 @@
+before_script:
+- sudo apt-get install -yqq --no-install-recommends build-essential libasound2-dev
 language: rust
 rust:
   - stable
