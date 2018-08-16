@@ -1,15 +1,14 @@
-use amethyst::assets::AssetStorage;
-use amethyst::core::GlobalTransform;
-use amethyst::core::cgmath::{Matrix4, SquareMatrix, Transform};
-use amethyst::ecs::{Join, Read, ReadExpect, ReadStorage};
-use amethyst::renderer::{ActiveCamera, Attributes, Camera, Color, Effect, Encoder, Factory,
-                         Material, MaterialDefaults, Mesh, MeshHandle, NewEffect, Position, Query,
-                         Visibility};
-use amethyst::renderer::error::Result;
-use amethyst::renderer::pipe::DepthMode;
-use amethyst::renderer::pipe::pass::{Pass, PassData};
-
+use amethyst_assets::AssetStorage;
+use amethyst_core::GlobalTransform;
+use amethyst_core::cgmath::{Matrix4, SquareMatrix, Transform};
+use amethyst_renderer::{ActiveCamera, Attributes, Camera, Color, Effect, Encoder, Factory,
+                         Material, Mesh, MeshHandle, NewEffect, Position, Query, Visibility};
+use amethyst_renderer::error::Result;
+use amethyst_renderer::pipe::DepthMode;
+use amethyst_renderer::pipe::pass::{Pass, PassData};
 use glsl_layout::*;
+
+use specs::{Join, Read, ReadStorage};
 
 use std::marker::PhantomData;
 
@@ -51,7 +50,6 @@ impl<'a, V> PassData<'a> for DrawVoxels<V>
         Option<Read<'a, ActiveCamera>>,
         ReadStorage<'a, Camera>,
         Read<'a, AssetStorage<Mesh>>,
-        ReadExpect<'a, MaterialDefaults>,
         Option<Read<'a, Visibility>>,
         ReadStorage<'a, MeshHandle>,
         ReadStorage<'a, Material>,
@@ -86,7 +84,6 @@ impl<V> Pass for DrawVoxels<V>
             active,
             camera,
             mesh_storage,
-            material_defaults,
             visibility,
             mesh,
             material,
@@ -102,7 +99,6 @@ impl<V> Pass for DrawVoxels<V>
                     effect,
                     mesh_storage.get(mesh),
                     Some(material),
-                    &material_defaults,
                     camera,
                     Some(global),
                     &[V::QUERIED_ATTRIBUTES],
@@ -117,7 +113,6 @@ impl<V> Pass for DrawVoxels<V>
                             effect,
                             mesh_storage.get(mesh),
                             Some(material),
-                            &material_defaults,
                             camera,
                             Some(global),
                             &[V::QUERIED_ATTRIBUTES]
@@ -131,7 +126,6 @@ impl<V> Pass for DrawVoxels<V>
                             effect,
                             mesh_storage.get(mesh),
                             material.get(*entity),
-                            &material_defaults,
                             camera,
                             global.get(*entity),
                             &[V::QUERIED_ATTRIBUTES]
@@ -148,7 +142,6 @@ pub(crate) fn draw_mesh(
     effect: &mut Effect,
     mesh: Option<&Mesh>,
     material: Option<&Material>,
-    material_defaults: &MaterialDefaults,
     camera: Option<(&Camera, &GlobalTransform)>,
     global: Option<&GlobalTransform>,
     attributes: &[Attributes<'static>],

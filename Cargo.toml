@@ -11,13 +11,17 @@ repository = "https://github.com/davidedmonds/dot_vox_amethyst"
 readme = "README.md"
 
 [dependencies]
-amethyst = "^0.8.0"
+amethyst_assets = "0.4"
+amethyst_core = "0.3.0"
+amethyst_renderer = "0.8.0"
 derivative = "^1.0.0"
 dot_vox = "^3.0.0"
 glsl-layout = "0.1.1"
 gfx_core = "0.8.2"
 lazy_static = "^1.1.0"
 log = "^0.4.0"
+specs = "^0.12"
 
 [dev-dependencies]
 avow = "^0.2"
+amethyst = "0.8"

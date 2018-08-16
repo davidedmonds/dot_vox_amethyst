@@ -1,5 +1,5 @@
-use amethyst::assets::{Result, SimpleFormat};
-use amethyst::renderer::{Mesh, MeshData, PosColor};
+use amethyst_assets::{Result, SimpleFormat};
+use amethyst_renderer::{Mesh, MeshData, PosColor};
 use dot_vox;
 use dot_vox::Voxel;
 
